@@ -25,8 +25,8 @@
               <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">NAME</th>
               <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">CATEGORY</th>
               <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">LOCATION</th>
+              <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700 text-center">COUNTER</th>
               <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">AVAILABLE</th>
-              <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">COUNTER</th>
               <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">CREATED AT</th>
               <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">UPDATED AT</th>
               <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">Actions</th>
@@ -41,8 +41,8 @@
               <td class="py-3 px-4">{{ item.Name }}</td>
               <td class="py-3 px-4">{{ item.Category.Name }}</td>
               <td class="py-3 px-4">{{ item.Location }}</td>
-              <td class="py-3 px-4">{{ item.Available ? "Iya" : "Tidak" }}</td>
               <td class="py-3 px-4">{{ item.Counter }}</td>
+              <td class="py-3 px-4">{{ item.Available ? "Iya" : "Tidak" }}</td>
               <td class="py-3 px-4">{{ formatDate(item.CreatedAt) }}</td>
               <td class="py-3 px-4">{{ formatDate(item.UpdatedAt) }}</td>
               <td class="py-3 px-4">
@@ -121,7 +121,7 @@
           <div class="bg-white text-green-900 p-8 rounded-lg shadow-lg">
             <img :src="'/images/success.png'" class="w-[100px] text-center mb-3 mx-auto" alt="" />
             <h1 class="text-2xl font-semibold text-center">Success!</h1>
-            <p class="text-center">Promo updated successfully!</p>
+            <p class="text-center">Frame updated successfully!</p>
           </div>
         </div>
       </transition>
@@ -129,7 +129,7 @@
       <!-- Delete Confirmation Modal -->
       <div v-if="showDeleteConfirmation" class="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
         <div class="bg-white p-6 rounded-xl shadow-lg w-96">
-          <h2 class="text-lg text-gray-600">Are you sure you want to delete this promo?</h2>
+          <h2 class="text-lg text-gray-600">Are you sure you want to delete this frame?</h2>
           <div class="flex justify-end mt-4">
             <button @click="confirmDelete" class="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-700 hover:scale-[1.05] transition ease-in-out delay-100">Delete</button>
             <button @click="cancelDelete" class="ml-4 bg-gray-300 text-gray-700 px-4 py-2 rounded-full hover:bg-gray-400 hover:scale-[1.05] transition ease-in-out delay-100">Cancel</button>
@@ -143,7 +143,7 @@
           <div class="bg-white text-green-900 p-8 rounded-lg shadow-lg">
             <img :src="'/images/success.png'" class="w-[100px] text-center mb-3 mx-auto" alt="" />
             <h1 class="text-2xl font-semibold text-center">Success!</h1>
-            <p class="text-center">Promo deleted successfully!</p>
+            <p class="text-center">Frame deleted successfully!</p>
           </div>
         </div>
       </transition>

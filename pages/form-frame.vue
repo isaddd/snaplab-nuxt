@@ -5,50 +5,43 @@
       <h1 class="text-2xl font-semibold mb-3">Create Frame</h1>
 
       <form @submit.prevent="submitForm" class="space-y-4">
-        <!-- Promo Code -->
+        <!-- File Upload -->
         <div>
-          <label for="code" class="block text-sm font-medium text-gray-800">Promo Code</label>
-          <input type="text" id="code" v-model="formData.code" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" placeholder="Enter promo code" />
-          <p v-if="formErrors.code" class="text-red-500 text-xs mt-1">{{ formErrors.code }}</p>
-        </div>
-        <!-- Discount -->
-        <div>
-          <label for="discount" class="block text-sm font-medium text-gray-800">Discount</label>
-          <input type="number" id="discount" v-model="formData.discount" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" placeholder="Enter discount value" />
-          <p v-if="formErrors.discount" class="text-red-500 text-xs mt-1">{{ formErrors.discount }}</p>
+          <label for="file" class="block text-sm font-medium text-gray-800">File (Image)</label>
+          <input type="file" id="file" @change="handleFileUpload" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" />
+          <p v-if="formErrors.file" class="text-red-500 text-xs mt-1">{{ formErrors.file }}</p>
         </div>
 
-        <!-- Is Limited -->
-        <div class="flex items-center">
-          <input required type="checkbox" id="limited" v-model="formData.limited" />
-          <label for="limited" class="block text-sm font-medium text-gray-800 ml-[5px]">Is Limited?</label>
+        <!-- Name -->
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-800">Name</label>
+          <input type="text" id="name" v-model="formData.name" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" placeholder="Enter name" />
+          <p v-if="formErrors.name" class="text-red-500 text-xs mt-1">{{ formErrors.name }}</p>
         </div>
 
-        <!-- Promo Code Counter -->
+        <!-- Location -->
+        <div>
+          <label for="location" class="block text-sm font-medium text-gray-800">Location</label>
+          <input type="text" id="location" v-model="formData.location" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" placeholder="Enter location" />
+          <p v-if="formErrors.location" class="text-red-500 text-xs mt-1">{{ formErrors.location }}</p>
+        </div>
+
+        <!-- Category -->
+        <div>
+          <label for="category_id" class="block text-sm font-medium text-gray-800">Category</label>
+          <select id="category_id" v-model="formData.category_id" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" :disabled="!categories.data || !categories.data.categories">
+            <option value="" disabled>Select category</option>
+            <!-- Ensure categories.data.categories is available before rendering options -->
+            <option v-for="category in categories.data?.categories || []" :key="category.ID" :value="category.ID">{{ category.Name }}</option>
+          </select>
+          <p v-if="formErrors.category_id" class="text-red-500 text-xs mt-1">{{ formErrors.category_id }}</p>
+        </div>
+
+        <!-- Counter -->
         <div>
           <label for="counter" class="block text-sm font-medium text-gray-800">Counter</label>
           <input type="number" id="counter" v-model="formData.counter" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" placeholder="Enter counter value" />
           <p v-if="formErrors.counter" class="text-red-500 text-xs mt-1">{{ formErrors.counter }}</p>
-        </div>
-
-        <!-- Expiry Date -->
-        <div>
-          <label for="date_expire" class="block text-sm font-medium text-gray-800">Expiry Date</label>
-          <input type="date" id="date_expire" v-model="formData.date_expire" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" />
-          <p v-if="formErrors.date_expire" class="text-red-500 text-xs mt-1">{{ formErrors.date_expire }}</p>
-        </div>
-
-        <!-- Available -->
-        <div class="flex items-center">
-          <input required type="checkbox" id="available" v-model="formData.available" />
-          <label for="available" class="block text-sm font-medium text-gray-800 ml-[5px]">Available?</label>
-        </div>
-
-        <!-- Duration -->
-        <div>
-          <label for="duration" class="block text-sm font-medium text-gray-800">Duration (in days)</label>
-          <input type="number" id="duration" v-model="formData.duration" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" placeholder="Enter duration in days" />
-          <p v-if="formErrors.duration" class="text-red-500 text-xs mt-1">{{ formErrors.duration }}</p>
         </div>
 
         <!-- Submit Button -->
@@ -72,50 +65,95 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router"; // To handle redirection
 
 const formData = ref({
-  discount: "",
-  code: "",
-  limited: false,
+  file: null,
+  name: "",
+  location: "",
+  category_id: "",
   counter: "",
-  date_expire: "",
-  available: false,
-  duration: "",
 });
 
 const formErrors = ref({
-  code: "",
-  discount: "",
+  file: "",
+  name: "",
+  location: "",
+  category_id: "",
   counter: "",
-  date_expire: "",
-  duration: "",
 });
 
 const showSuccessPopup = ref(false); // Track the success popup visibility
 const router = useRouter(); // Access router for redirection
+const categories = ref([]); // Categories will be fetched and stored here
+
+// Fetch categories from API when the component is mounted
+onMounted(async () => {
+  try {
+    const token = localStorage.getItem("authToken"); // Retrieve the token from localStorage
+
+    if (!token) {
+      console.error("No authentication token found.");
+      return;
+    }
+
+    const response = await fetch("https://services.snaplab.id/api/v1/categories/?page=1&pageSize=100", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`, // Add the token to the Authorization header
+      },
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      categories.value = data; // Populate categories array with fetched data
+    } else {
+      console.error("Failed to fetch categories:", data.message);
+    }
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+  }
+});
+
+const handleFileUpload = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    formData.value.file = file;
+  }
+};
 
 const submitForm = async () => {
   // Reset previous error messages
   formErrors.value = {
-    code: "",
-    discount: "",
+    file: "",
+    name: "",
+    location: "",
+    category_id: "",
     counter: "",
-    date_expire: "",
-    duration: "",
   };
 
   // Check for empty required fields
   let isValid = true;
 
-  if (!formData.value.code) {
-    formErrors.value.code = "Promo code is required.";
+  if (!formData.value.file) {
+    formErrors.value.file = "Image file is required.";
     isValid = false;
   }
 
-  if (!formData.value.discount) {
-    formErrors.value.discount = "Discount is required.";
+  if (!formData.value.name) {
+    formErrors.value.name = "Name is required.";
+    isValid = false;
+  }
+
+  if (!formData.value.location) {
+    formErrors.value.location = "Location is required.";
+    isValid = false;
+  }
+
+  if (!formData.value.category_id) {
+    formErrors.value.category_id = "Category is required.";
     isValid = false;
   }
 
@@ -124,32 +162,32 @@ const submitForm = async () => {
     isValid = false;
   }
 
-  if (!formData.value.date_expire) {
-    formErrors.value.date_expire = "Expiry date is required.";
-    isValid = false;
-  }
-
-  if (!formData.value.duration) {
-    formErrors.value.duration = "Duration is required.";
-    isValid = false;
-  }
-
   if (!isValid) {
     return; // Do not submit the form if there are errors
   }
 
+  // Log the form data to verify structure before sending
+  console.log("Form data being submitted:", JSON.stringify(formData.value));
+
   const token = localStorage.getItem("authToken"); // Retrieve the token from localStorage or session storage
 
-  const url = "https://services.snaplab.id/api/v1/promo/";
+  const url = "https://services.snaplab.id/api/v1/frame/";
+
+  // Use FormData to handle file upload
+  const formDataToSend = new FormData();
+  formDataToSend.append("file", formData.value.file);
+  formDataToSend.append("name", formData.value.name);
+  formDataToSend.append("location", formData.value.location);
+  formDataToSend.append("category_id", formData.value.category_id);
+  formDataToSend.append("counter", formData.value.counter);
 
   try {
     const response = await fetch(url, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Add the token to the Authorization header
       },
-      body: JSON.stringify(formData.value),
+      body: formDataToSend,
     });
 
     const data = await response.json();
@@ -160,13 +198,11 @@ const submitForm = async () => {
 
       // Reset form
       formData.value = {
-        discount: "",
-        code: "",
-        limited: false,
+        file: null,
+        name: "",
+        location: "",
+        category_id: "",
         counter: "",
-        date_expire: "",
-        available: false,
-        duration: "",
       };
 
       // Close the success popup after 2 seconds and redirect
@@ -176,12 +212,12 @@ const submitForm = async () => {
       }, 2000);
     } else {
       // Handle error if the response is not successful
-      // alert(`Error: ${data.message || "An error occurred while creating the promo."}`);
+      alert(`Error: ${data.message || "An error occurred while creating the frame."}`);
     }
   } catch (error) {
     // Log any error that occurs during the request
-    console.error("Error creating promo:", error);
-    // alert("An error occurred while creating the promo.");
+    console.error("Error creating frame:", error);
+    alert("An error occurred while creating the frame.");
   }
 };
 </script>
@@ -210,37 +246,5 @@ button {
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
-}
-/* Style the checkbox */
-input[type="checkbox"] {
-  -webkit-appearance: none; /* Remove default styling */
-  -moz-appearance: none;
-  appearance: none;
-  width: 20px; /* Size of the checkbox */
-  height: 20px; /* Size of the checkbox */
-  border-radius: 50%; /* Makes the checkbox rounded */
-  border: 1px solid #272727; /* Border color */
-  background-color: white; /* Background color when unchecked */
-  position: relative;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-/* Style when checkbox is checked */
-input[type="checkbox"]:checked {
-  background-color: #272727; /* Background color when checked */
-  border-color: #272727; /* Border color when checked */
-}
-
-input[type="checkbox"]:checked::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 7px; /* Size of the check mark */
-  height: 7px; /* Size of the check mark */
-  background-color: white; /* Color of the check mark */
-  border-radius: 50%; /* Makes the check mark circular */
-  transform: translate(-50%, -50%); /* Centers the check mark */
 }
 </style>
