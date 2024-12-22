@@ -1,7 +1,7 @@
 <template>
   <div class="flex min-h-screen bg-gray-100">
     <Sidebar />
-    <div class="container w-full p-6 flex-1">
+    <div class="container w-full p-6 flex-1 ml-64">
       <h1 class="text-2xl font-semibold mb-1">Frame Table</h1>
 
       <div class="flex justify-between items-center">
@@ -45,8 +45,9 @@
               <td class="py-3 px-4">{{ item.Counter }}</td>
               <td class="py-3 px-4">{{ formatDate(item.CreatedAt) }}</td>
               <td class="py-3 px-4">{{ formatDate(item.UpdatedAt) }}</td>
-              <td class="py-3 px-4 flex flex-col items-start" style="border: none">
+              <td class="py-3 px-4">
                 <button @click="editItem(item)" class="pt-3 text-yellow-500 hover:text-yellow-600">Edit</button>
+                <br />
                 <button @click="deleteItem(item.ID)" class="text-red-500 hover:text-red-600">Delete</button>
               </td>
             </tr>

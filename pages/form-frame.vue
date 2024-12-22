@@ -1,7 +1,7 @@
 <template>
   <div class="flex min-h-screen bg-gray-100">
     <Sidebar />
-    <div class="container w-full p-6 flex-1">
+    <div class="container w-full p-6 flex-1 ml-64">
       <h1 class="text-2xl font-semibold mb-3">Create Frame</h1>
 
       <form @submit.prevent="submitForm" class="space-y-4">

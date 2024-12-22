@@ -1,7 +1,7 @@
 <template>
-  <div class="flex items-center justify-center min-h-screen bg-gray-100">
-    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-      <h2 class="text-2xl font-semibold text-center text-gray-700 mb-6">Login</h2>
+  <div class="flex items-center justify-center min-h-screen bg-[#4f4f4f]">
+    <div class="bg-white px-10 py-10 rounded-2xl shadow-lg w-full max-w-md">
+      <h2 class="text-3xl font-semibold text-center text-gray-700 mb-6">Snaplab</h2>
 
       <!-- Display error message if login fails -->
       <div v-if="loginError" class="text-sm mb-4 p-4 bg-red-100 text-red-700 border border-red-300 rounded-md">
@@ -10,26 +10,26 @@
 
       <!-- Success Popup with Transition -->
       <transition name="fade" @before-enter="beforeEnter" @enter="enter" @leave="leave">
-        <div v-if="loginSuccess" class="fixed inset-0 flex justify-center items-center bg-gray-700 bg-opacity-50 z-50">
-          <div class="bg-green-100 text-green-700 p-6 rounded-lg shadow-lg">
+        <div v-if="loginSuccess" class="fixed inset-0 flex justify-center items-center bg-gray-700 bg-opacity-60 z-50">
+          <div class="bg-white text-green-600 p-6 rounded-lg shadow-lg">
             <p class="text-center font-semibold">Login Successful!</p>
             <!-- <iframe src="https://giphy.com/embed/MelhioWPAo6k4Q6BTp" width="480" height="480" style="" frameBorder="0" class="giphy-embed" allowFullScreen></iframe> -->
           </div>
         </div>
       </transition>
 
-      <form @submit.prevent="login">
-        <div class="mb-4">
-          <label for="email" class="block text-sm font-medium text-gray-600">Email</label>
-          <input type="email" id="email" v-model="email" required class="w-full mt-2 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter your email" />
+      <form @submit.prevent="login" class="flex flex-col items-center min-w-full">
+        <div class="mb-4 w-full">
+          <label for="email" class="block text-sm font-medium text-gray-600 ml-5">Email</label>
+          <input type="email" id="email" v-model="email" required class="w-full mt-2 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#2f2f2f]" placeholder="Enter your email" />
         </div>
 
-        <div class="mb-6">
-          <label for="password" class="block text-sm font-medium text-gray-600">Password</label>
-          <input type="password" id="password" v-model="password" required class="w-full mt-2 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter your password" />
+        <div class="mb-6 w-full">
+          <label for="password" class="block text-sm font-medium text-gray-600 ml-5">Password</label>
+          <input type="password" id="password" v-model="password" required class="w-full mt-2 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#2f2f2f]" placeholder="Enter your password" />
         </div>
 
-        <button type="submit" class="w-full py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">Login</button>
+        <button type="submit" class="w-36 py-2 bg-[#4f4f4f] text-white font-semibold rounded-full hover:bg-gray-500 hover:scale-[1.05] transition duration-300 focus:outline-none focus:ring-2">Login</button>
       </form>
     </div>
   </div>

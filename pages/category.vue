@@ -1,7 +1,7 @@
 <template>
   <div class="flex min-h-screen bg-gray-100">
     <Sidebar />
-    <div class="container w-full p-6 flex-1">
+    <div class="container w-full p-6 flex-1 ml-64">
       <h1 class="text-2xl font-semibold mb-1">Categories Table</h1>
 
       <div class="flex justify-between items-center">
@@ -53,8 +53,7 @@
               <td class="py-3 px-4">{{ item.IsSeasonal ? "Iya" : "Tidak" }}</td>
               <td class="py-3 px-4">{{ formatDate(item.CreatedAt) }}</td>
               <td class="py-3 px-4">{{ formatDate(item.UpdatedAt) }}</td>
-              <td class="py-3 px-4 flex flex-col items-start">
-                <button @click="editItem(item)" class="text-yellow-500 hover:text-yellow-600">Edit</button>
+              <td class="py-3 px-4">
                 <button @click="deleteItem(item.ID)" class="text-red-500 hover:text-red-600">Delete</button>
               </td>
             </tr>
@@ -128,7 +127,7 @@
           <div class="bg-white text-green-900 p-8 rounded-lg shadow-lg">
             <img :src="'/images/success.png'" class="w-[100px] text-center mb-3 mx-auto" alt="" />
             <h1 class="text-2xl font-semibold text-center">Success!</h1>
-            <p class="text-center">Promo updated successfully!</p>
+            <p class="text-center">Category updated successfully!</p>
           </div>
         </div>
       </transition>
@@ -136,7 +135,7 @@
       <!-- Delete Confirmation Modal -->
       <div v-if="showDeleteConfirmation" class="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
         <div class="bg-white p-6 rounded-xl shadow-lg w-96">
-          <h2 class="text-lg text-gray-600">Are you sure you want to delete this promo?</h2>
+          <h2 class="text-lg text-gray-600">Are you sure you want to delete this category?</h2>
           <div class="flex justify-end mt-4">
             <button @click="confirmDelete" class="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-700 hover:scale-[1.05] transition ease-in-out delay-100">Delete</button>
             <button @click="cancelDelete" class="ml-4 bg-gray-300 text-gray-700 px-4 py-2 rounded-full hover:bg-gray-400 hover:scale-[1.05] transition ease-in-out delay-100">Cancel</button>
@@ -150,7 +149,7 @@
           <div class="bg-white text-green-900 p-8 rounded-lg shadow-lg">
             <img :src="'/images/success.png'" class="w-[100px] text-center mb-3 mx-auto" alt="" />
             <h1 class="text-2xl font-semibold text-center">Success!</h1>
-            <p class="text-center">Promo deleted successfully!</p>
+            <p class="text-center">Category deleted successfully!</p>
           </div>
         </div>
       </transition>

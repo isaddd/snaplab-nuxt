@@ -1,59 +1,87 @@
 <template>
   <div class="flex min-h-screen bg-gray-100">
     <Sidebar />
-    <div class="container w-full p-6 flex-1">
+    <div class="container w-full p-6 flex-1 ml-64">
       <h1 class="text-2xl font-semibold mb-3">Create Category</h1>
 
       <form @submit.prevent="submitForm" class="space-y-4">
-        <!-- Promo Code -->
+        <!-- Name -->
         <div>
-          <label for="code" class="block text-sm font-medium text-gray-800">Promo Code</label>
-          <input type="text" id="code" v-model="formData.code" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" placeholder="Enter promo code" />
-          <p v-if="formErrors.code" class="text-red-500 text-xs mt-1">{{ formErrors.code }}</p>
-        </div>
-        <!-- Discount -->
-        <div>
-          <label for="discount" class="block text-sm font-medium text-gray-800">Discount</label>
-          <input type="number" id="discount" v-model="formData.discount" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" placeholder="Enter discount value" />
-          <p v-if="formErrors.discount" class="text-red-500 text-xs mt-1">{{ formErrors.discount }}</p>
+          <label for="name" class="block text-sm font-medium text-gray-800">Name</label>
+          <input type="text" id="name" v-model="formData.Name" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" placeholder="Enter Name" />
+          <p v-if="formErrors.Name" class="text-red-500 text-xs mt-1">{{ formErrors.Name }}</p>
         </div>
 
-        <!-- Is Limited -->
+        <!-- InterRowPadding -->
+        <div>
+          <label for="inter_row_padding" class="block text-sm font-medium text-gray-800">Inter Row Padding</label>
+          <input type="number" id="inter_row_padding" v-model="formData.InterRowPadding" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" placeholder="Enter Inter Row Padding" />
+          <p v-if="formErrors.InterRowPadding" class="text-red-500 text-xs mt-1">{{ formErrors.InterRowPadding }}</p>
+        </div>
+
+        <!-- TopFramePadding -->
+        <div>
+          <label for="top_frame_padding" class="block text-sm font-medium text-gray-800">Top Frame Padding</label>
+          <input type="number" id="top_frame_padding" v-model="formData.TopFramePadding" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" placeholder="Enter Top Frame Padding" />
+          <p v-if="formErrors.TopFramePadding" class="text-red-500 text-xs mt-1">{{ formErrors.TopFramePadding }}</p>
+        </div>
+
+        <!-- InterColPadding -->
+        <div>
+          <label for="inter_col_padding" class="block text-sm font-medium text-gray-800">Inter Column Padding</label>
+          <input type="number" id="inter_col_padding" v-model="formData.InterColPadding" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" placeholder="Enter Inter Column Padding" />
+          <p v-if="formErrors.InterColPadding" class="text-red-500 text-xs mt-1">{{ formErrors.InterColPadding }}</p>
+        </div>
+
+        <!-- CustomPadding -->
+        <div>
+          <label for="custom_padding" class="block text-sm font-medium text-gray-800">Custom Padding</label>
+          <input type="number" id="custom_padding" v-model="formData.CustomPadding" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" placeholder="Enter Custom Padding" />
+          <p v-if="formErrors.CustomPadding" class="text-red-500 text-xs mt-1">{{ formErrors.CustomPadding }}</p>
+        </div>
+
+        <!-- ImageID -->
+        <div>
+          <label for="image_id" class="block text-sm font-medium text-gray-800">Image ID</label>
+          <input type="number" id="image_id" v-model="formData.ImageID" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" placeholder="Enter Image ID" />
+          <p v-if="formErrors.ImageID" class="text-red-500 text-xs mt-1">{{ formErrors.ImageID }}</p>
+        </div>
+
+        <!-- Width -->
+        <div>
+          <label for="width" class="block text-sm font-medium text-gray-800">Width</label>
+          <input type="number" id="width" v-model="formData.Width" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" placeholder="Enter Width" />
+          <p v-if="formErrors.Width" class="text-red-500 text-xs mt-1">{{ formErrors.Width }}</p>
+        </div>
+
+        <!-- Height -->
+        <div>
+          <label for="height" class="block text-sm font-medium text-gray-800">Height</label>
+          <input type="number" id="height" v-model="formData.Height" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" placeholder="Enter Height" />
+          <p v-if="formErrors.Height" class="text-red-500 text-xs mt-1">{{ formErrors.Height }}</p>
+        </div>
+
+        <!-- Column Mirrored -->
         <div class="flex items-center">
-          <input required type="checkbox" id="limited" v-model="formData.limited" />
-          <label for="limited" class="block text-sm font-medium text-gray-800 ml-[5px]">Is Limited?</label>
+          <input type="checkbox" id="is_column_mirrored" v-model="formData.IsColumnMirrored" />
+          <label for="is_column_mirrored" class="block text-sm font-medium text-gray-800 ml-[5px]">Column Mirrored</label>
         </div>
 
-        <!-- Promo Code Counter -->
-        <div>
-          <label for="counter" class="block text-sm font-medium text-gray-800">Counter</label>
-          <input type="number" id="counter" v-model="formData.counter" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" placeholder="Enter counter value" />
-          <p v-if="formErrors.counter" class="text-red-500 text-xs mt-1">{{ formErrors.counter }}</p>
-        </div>
-
-        <!-- Expiry Date -->
-        <div>
-          <label for="date_expire" class="block text-sm font-medium text-gray-800">Expiry Date</label>
-          <input type="date" id="date_expire" v-model="formData.date_expire" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" />
-          <p v-if="formErrors.date_expire" class="text-red-500 text-xs mt-1">{{ formErrors.date_expire }}</p>
-        </div>
-
-        <!-- Available -->
+        <!-- No Cut -->
         <div class="flex items-center">
-          <input required type="checkbox" id="available" v-model="formData.available" />
-          <label for="available" class="block text-sm font-medium text-gray-800 ml-[5px]">Available?</label>
+          <input type="checkbox" id="is_no_cut" v-model="formData.IsNoCut" />
+          <label for="is_no_cut" class="block text-sm font-medium text-gray-800 ml-[5px]">No Cut?</label>
         </div>
 
-        <!-- Duration -->
-        <div>
-          <label for="duration" class="block text-sm font-medium text-gray-800">Duration (in days)</label>
-          <input type="number" id="duration" v-model="formData.duration" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" placeholder="Enter duration in days" />
-          <p v-if="formErrors.duration" class="text-red-500 text-xs mt-1">{{ formErrors.duration }}</p>
+        <!-- Is Seasonal -->
+        <div class="flex items-center">
+          <input type="checkbox" id="is_seasonal" v-model="formData.IsSeasonal" />
+          <label for="is_seasonal" class="block text-sm font-medium text-gray-800 ml-[5px]">Is Seasonal?</label>
         </div>
 
         <!-- Submit Button -->
         <div>
-          <button type="submit" class="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600 focus:outline-none">Create Promo</button>
+          <button type="submit" class="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600 focus:outline-none">Create Category</button>
         </div>
       </form>
     </div>
@@ -64,7 +92,7 @@
         <div class="bg-white text-green-900 p-8 rounded-lg shadow-lg">
           <img :src="'/images/success.png'" class="w-[100px] text-center mb-3 mx-auto" alt="" />
           <h1 class="text-2xl font-semibold text-center">Success!</h1>
-          <p class="text-center">Promo created successfully!</p>
+          <p class="text-center">Category created successfully!</p>
         </div>
       </div>
     </transition>
@@ -76,21 +104,31 @@ import { ref } from "vue";
 import { useRouter } from "vue-router"; // To handle redirection
 
 const formData = ref({
-  discount: "",
-  code: "",
-  limited: false,
-  counter: "",
-  date_expire: "",
-  available: false,
-  duration: "",
+  Name: "",
+  InterRowPadding: "",
+  TopFramePadding: "",
+  InterColPadding: "",
+  CustomPadding: "",
+  ImageID: "",
+  Width: "",
+  Height: "",
+  IsColumnMirrored: false,
+  IsNoCut: false,
+  IsSeasonal: false,
 });
 
 const formErrors = ref({
-  code: "",
-  discount: "",
-  counter: "",
-  date_expire: "",
-  duration: "",
+  Name: "",
+  InterRowPadding: "",
+  TopFramePadding: "",
+  InterColPadding: "",
+  CustomPadding: "",
+  ImageID: "",
+  Width: "",
+  Height: "",
+  IsColumnMirrored: false,
+  IsNoCut: false,
+  IsSeasonal: false,
 });
 
 const showSuccessPopup = ref(false); // Track the success popup visibility
@@ -99,38 +137,59 @@ const router = useRouter(); // Access router for redirection
 const submitForm = async () => {
   // Reset previous error messages
   formErrors.value = {
-    code: "",
-    discount: "",
-    counter: "",
-    date_expire: "",
-    duration: "",
+    Name: "",
+    InterRowPadding: "",
+    TopFramePadding: "",
+    InterColPadding: "",
+    CustomPadding: "",
+    ImageID: "",
+    Width: "",
+    Height: "",
+    IsColumnMirrored: false,
+    IsNoCut: false,
+    IsSeasonal: false,
   };
 
   // Check for empty required fields
   let isValid = true;
 
-  if (!formData.value.code) {
-    formErrors.value.code = "Promo code is required.";
+  if (!formData.value.Name) {
+    formErrors.value.Name = "Name is required.";
     isValid = false;
   }
 
-  if (!formData.value.discount) {
-    formErrors.value.discount = "Discount is required.";
+  if (!formData.value.InterRowPadding) {
+    formErrors.value.InterRowPadding = "Inter-row padding is required.";
     isValid = false;
   }
 
-  if (!formData.value.counter) {
-    formErrors.value.counter = "Counter is required.";
+  if (!formData.value.TopFramePadding) {
+    formErrors.value.TopFramePadding = "Top frame padding is required.";
     isValid = false;
   }
 
-  if (!formData.value.date_expire) {
-    formErrors.value.date_expire = "Expiry date is required.";
+  if (!formData.value.InterColPadding) {
+    formErrors.value.InterColPadding = "Inter-column padding is required.";
     isValid = false;
   }
 
-  if (!formData.value.duration) {
-    formErrors.value.duration = "Duration is required.";
+  if (!formData.value.CustomPadding) {
+    formErrors.value.CustomPadding = "Custom padding is required.";
+    isValid = false;
+  }
+
+  if (!formData.value.ImageID) {
+    formErrors.value.ImageID = "Image ID is required.";
+    isValid = false;
+  }
+
+  if (!formData.value.Width) {
+    formErrors.value.Width = "Width is required.";
+    isValid = false;
+  }
+
+  if (!formData.value.Height) {
+    formErrors.value.Height = "Height is required.";
     isValid = false;
   }
 
@@ -138,9 +197,12 @@ const submitForm = async () => {
     return; // Do not submit the form if there are errors
   }
 
+  // Log the form data to verify structure before sending
+  // console.log("Form data being submitted:", JSON.stringify(formData.value));
+
   const token = localStorage.getItem("authToken"); // Retrieve the token from localStorage or session storage
 
-  const url = "https://services.snaplab.id/api/v1/promo/";
+  const url = "https://services.snaplab.id/api/v1/categories/";
 
   try {
     const response = await fetch(url, {
@@ -160,13 +222,17 @@ const submitForm = async () => {
 
       // Reset form
       formData.value = {
-        discount: "",
-        code: "",
-        limited: false,
-        counter: "",
-        date_expire: "",
-        available: false,
-        duration: "",
+        Name: "",
+        InterRowPadding: "",
+        TopFramePadding: "",
+        InterColPadding: "",
+        CustomPadding: "",
+        ImageID: "",
+        Width: "",
+        Height: "",
+        IsColumnMirrored: false,
+        IsNoCut: false,
+        IsSeasonal: false,
       };
 
       // Close the success popup after 2 seconds and redirect
@@ -176,17 +242,18 @@ const submitForm = async () => {
       }, 2000);
     } else {
       // Handle error if the response is not successful
-      // alert(`Error: ${data.message || "An error occurred while creating the promo."}`);
+      // alert(`Error: ${data.message || "An error occurred while creating the categories."}`);
     }
   } catch (error) {
     // Log any error that occurs during the request
-    console.error("Error creating promo:", error);
-    // alert("An error occurred while creating the promo.");
+    console.error("Error creating categories:", error);
+    // alert("An error occurred while creating the categories.");
   }
 };
 </script>
 
 <style scoped>
+/* Additional custom styles for the form */
 .container {
   max-width: 100%;
 }
@@ -211,25 +278,25 @@ button {
 .fade-leave-to {
   opacity: 0;
 }
-/* Style the checkbox */
+
 input[type="checkbox"] {
-  -webkit-appearance: none; /* Remove default styling */
+  /* Custom checkbox styles */
+  -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  width: 20px; /* Size of the checkbox */
-  height: 20px; /* Size of the checkbox */
-  border-radius: 50%; /* Makes the checkbox rounded */
-  border: 1px solid #272727; /* Border color */
-  background-color: white; /* Background color when unchecked */
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid #272727;
+  background-color: white;
   position: relative;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-/* Style when checkbox is checked */
 input[type="checkbox"]:checked {
-  background-color: #272727; /* Background color when checked */
-  border-color: #272727; /* Border color when checked */
+  background-color: #272727;
+  border-color: #272727;
 }
 
 input[type="checkbox"]:checked::after {
@@ -237,10 +304,10 @@ input[type="checkbox"]:checked::after {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 7px; /* Size of the check mark */
-  height: 7px; /* Size of the check mark */
-  background-color: white; /* Color of the check mark */
-  border-radius: 50%; /* Makes the check mark circular */
-  transform: translate(-50%, -50%); /* Centers the check mark */
+  width: 7px;
+  height: 7px;
+  background-color: white;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>
