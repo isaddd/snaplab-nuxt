@@ -73,43 +73,9 @@
       <!-- Edit Modal -->
       <div v-if="editing" class="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">
         <div class="bg-white p-6 rounded-xl shadow-lg w-96">
-          <h2 class="text-xl font-semibold text-center mb-4">Edit Item</h2>
-          <!-- Promo Code -->
-          <div>
-            <label for="code" class="block text-xs font-medium text-gray-700">Promo Code</label>
-            <input type="text" id="code" v-model="currentItem.Code" class="mt-1 p-2 w-full border border-gray-300 rounded-md" placeholder="Enter promo code" />
-          </div>
-          <div class="mt-2">
-            <label for="discount" class="block text-xs font-medium text-gray-700">Discount</label>
-            <input type="number" id="discount" v-model="currentItem.Discount" class="mt-1 p-2 w-full border border-gray-300 rounded-md" placeholder="Enter discount value" />
-          </div>
-          <!-- Is Limited -->
-          <div class="flex items-center my-2">
-            <input required type="checkbox" id="Limited" v-model="currentItem.Limited" />
-            <label for="Limited" class="block text-xs font-medium text-gray-700 ml-[5px]">Is Limited?</label>
-          </div>
-          <!-- Promo Code Counter -->
-          <div>
-            <label for="counter" class="block text-xs font-medium text-gray-700">Counter</label>
-            <input type="number" id="counter" v-model="currentItem.Counter" class="mt-1 p-2 w-full border border-gray-300 rounded-md" placeholder="Enter counter value" />
-          </div>
-          <!-- Expiry Date -->
-          <div class="mt-2">
-            <label for="date_expire" class="block text-xs font-medium text-gray-700">Expiry Date</label>
-            <input type="date" id="date_expire" v-model="currentItem.ExpiryDate" class="mt-1 p-2 w-full border border-gray-300 rounded-md" />
-          </div>
-          <!-- Available -->
-          <div class="flex items-center my-2">
-            <input required type="checkbox" id="available" v-model="currentItem.Available" />
-            <label for="available" class="block text-xs font-medium text-gray-700 ml-[5px]">Available?</label>
-          </div>
-          <!-- Duration -->
-          <div>
-            <label for="duration" class="block text-xs font-medium text-gray-700">Duration (in days)</label>
-            <input type="number" id="duration" v-model="currentItem.Duration" class="mt-1 p-2 w-full border border-gray-300 rounded-md" placeholder="Enter duration in days" />
-          </div>
+          <h2 class="text-xl font-semibold text-center mb-4">Change this Available Item?</h2>
           <div class="flex justify-center mt-2">
-            <button @click="saveItem" class="mt-2 bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600 hover:scale-[1.05] transition ease-in-out delay-100">Save</button>
+            <button @click="saveItem" class="mt-2 bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600 hover:scale-[1.05] transition ease-in-out delay-100">Change</button>
             <button @click="cancelEdit" class="ml-4 mt-2 bg-red-400 text-white px-6 py-2 rounded-full hover:bg-red-600 hover:scale-[1.05] transition ease-in-out delay-100">Cancel</button>
           </div>
         </div>
@@ -121,7 +87,7 @@
           <div class="bg-white text-green-900 p-8 rounded-lg shadow-lg">
             <img :src="'/images/success.png'" class="w-[100px] text-center mb-3 mx-auto" alt="" />
             <h1 class="text-2xl font-semibold text-center">Success!</h1>
-            <p class="text-center">Frame updated successfully!</p>
+            <p class="text-center">Available updated successfully!</p>
           </div>
         </div>
       </transition>
@@ -222,24 +188,28 @@ const editItem = (item) => {
 
 const saveItem = async () => {
   const token = localStorage.getItem("authToken");
-  const url = `https://services.snaplab.id/api/v1/frame/${currentItem.value.ID}`;
+  const url = `https://services.snaplab.id/api/v1/frame/change/${currentItem.value.ID}`; // PATCH request URL
 
   const response = await fetch(url, {
-    method: "PUT",
+    method: "PATCH", // Using PATCH method
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(currentItem.value),
+    body: JSON.stringify(currentItem.value), // Send the current item data
   });
 
   if (response.ok) {
+    editing.value = false;
     showSuccessPopup.value = true;
     setTimeout(() => {
       showSuccessPopup.value = false;
       editing.value = false;
-      fetchData();
+      fetchData(); // Refresh data after update
     }, 2000);
+  } else {
+    // Handle the error (optional)
+    console.error("Failed to update item");
   }
 };
 

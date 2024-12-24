@@ -8,7 +8,7 @@
         <!-- File Upload -->
         <div>
           <label for="file" class="block text-sm font-medium text-gray-800">File (Image)</label>
-          <input type="file" id="file" @change="handleFileUpload" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" />
+          <input type="file" id="file" @change="handleFileUpload" class="mt-1 p-2 w-auto border border-gray-400 rounded-xl" />
           <p v-if="formErrors.file" class="text-red-500 text-xs mt-1">{{ formErrors.file }}</p>
         </div>
 
@@ -29,7 +29,7 @@
         <!-- Category -->
         <div>
           <label for="category_id" class="block text-sm font-medium text-gray-800">Category</label>
-          <select id="category_id" v-model="formData.category_id" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" :disabled="!categories.data || !categories.data.categories">
+          <select id="category_id" v-model="formData.category_id" class="mt-1 p-2 w-auto border border-gray-400 rounded-xl" :disabled="!categories.data || !categories.data.categories">
             <option value="" disabled>Select category</option>
             <!-- Ensure categories.data.categories is available before rendering options -->
             <option v-for="category in categories.data?.categories || []" :key="category.ID" :value="category.ID">{{ category.Name }}</option>
