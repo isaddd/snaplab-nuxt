@@ -5,43 +5,55 @@
       <h1 class="text-2xl font-semibold mb-3">Create Frame</h1>
 
       <form @submit.prevent="submitForm" class="space-y-4">
-        <!-- File Upload -->
-        <div>
-          <label for="file" class="block text-sm font-medium text-gray-800">File (Image)</label>
-          <input type="file" id="file" @change="handleFileUpload" class="mt-1 p-2 w-auto border border-gray-400 rounded-xl" />
-          <p v-if="formErrors.file" class="text-red-500 text-xs mt-1">{{ formErrors.file }}</p>
+        <!-- Loop over form items -->
+        <div v-for="(item, index) in formData" :key="index" class="space-y-4">
+          <!-- File Upload -->
+          <div>
+            <label for="file" class="block text-sm font-medium text-gray-800">File (Image) #{{ index + 1 }}</label>
+            <input type="file" :id="'file' + index" @change="handleFileUpload($event, index)" class="mt-1 p-2 w-auto border border-gray-400 rounded-xl" />
+            <p v-if="formErrors[index]?.file" class="text-red-500 text-xs mt-1">{{ formErrors[index]?.file }}</p>
+          </div>
+
+          <!-- Name -->
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-800">Name</label>
+            <input type="text" :id="'name' + index" v-model="item.name" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" placeholder="Enter name" />
+            <p v-if="formErrors[index]?.name" class="text-red-500 text-xs mt-1">{{ formErrors[index]?.name }}</p>
+          </div>
+
+          <!-- Location -->
+          <div>
+            <label for="location" class="block text-sm font-medium text-gray-800">Location</label>
+            <input type="text" :id="'location' + index" v-model="item.location" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" placeholder="Enter location" />
+            <p v-if="formErrors[index]?.location" class="text-red-500 text-xs mt-1">{{ formErrors[index]?.location }}</p>
+          </div>
+
+          <!-- Category -->
+          <div>
+            <label for="category_id" class="block text-sm font-medium text-gray-800">Category</label>
+            <select :id="'category_id' + index" v-model="item.category_id" class="mt-1 p-2 w-auto border border-gray-400 rounded-xl" :disabled="!categories.data || !categories.data.categories">
+              <option value="" disabled>Select category</option>
+              <option v-for="category in categories.data?.categories || []" :key="category.ID" :value="category.ID">{{ category.Name }}</option>
+            </select>
+            <p v-if="formErrors[index]?.category_id" class="text-red-500 text-xs mt-1">{{ formErrors[index]?.category_id }}</p>
+          </div>
+
+          <!-- Counter -->
+          <div>
+            <label for="counter" class="block text-sm font-medium text-gray-800">Counter</label>
+            <input type="number" :id="'counter' + index" v-model="item.counter" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" placeholder="Enter counter value" />
+            <p v-if="formErrors[index]?.counter" class="text-red-500 text-xs mt-1">{{ formErrors[index]?.counter }}</p>
+          </div>
+
+          <!-- Remove Button -->
+          <div v-if="formData.length > 1">
+            <button type="button" @click="removeForm(index)" class="text-red-500 text-sm mt-2">Remove Form</button>
+          </div>
         </div>
 
-        <!-- Name -->
+        <!-- Add Form Button -->
         <div>
-          <label for="name" class="block text-sm font-medium text-gray-800">Name</label>
-          <input type="text" id="name" v-model="formData.name" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" placeholder="Enter name" />
-          <p v-if="formErrors.name" class="text-red-500 text-xs mt-1">{{ formErrors.name }}</p>
-        </div>
-
-        <!-- Location -->
-        <div>
-          <label for="location" class="block text-sm font-medium text-gray-800">Location</label>
-          <input type="text" id="location" v-model="formData.location" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" placeholder="Enter location" />
-          <p v-if="formErrors.location" class="text-red-500 text-xs mt-1">{{ formErrors.location }}</p>
-        </div>
-
-        <!-- Category -->
-        <div>
-          <label for="category_id" class="block text-sm font-medium text-gray-800">Category</label>
-          <select id="category_id" v-model="formData.category_id" class="mt-1 p-2 w-auto border border-gray-400 rounded-xl" :disabled="!categories.data || !categories.data.categories">
-            <option value="" disabled>Select category</option>
-            <!-- Ensure categories.data.categories is available before rendering options -->
-            <option v-for="category in categories.data?.categories || []" :key="category.ID" :value="category.ID">{{ category.Name }}</option>
-          </select>
-          <p v-if="formErrors.category_id" class="text-red-500 text-xs mt-1">{{ formErrors.category_id }}</p>
-        </div>
-
-        <!-- Counter -->
-        <div>
-          <label for="counter" class="block text-sm font-medium text-gray-800">Counter</label>
-          <input type="number" id="counter" v-model="formData.counter" class="mt-1 p-2 w-full border border-gray-400 rounded-xl" placeholder="Enter counter value" />
-          <p v-if="formErrors.counter" class="text-red-500 text-xs mt-1">{{ formErrors.counter }}</p>
+          <button type="button" @click="addForm" class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 focus:outline-none">Add Form</button>
         </div>
 
         <!-- Submit Button -->
@@ -68,21 +80,17 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router"; // To handle redirection
 
-const formData = ref({
-  file: null,
-  name: "",
-  location: "",
-  category_id: "",
-  counter: "",
-});
+const formData = ref([
+  {
+    file: null,
+    name: "",
+    location: "",
+    category_id: "",
+    counter: "",
+  },
+]);
 
-const formErrors = ref({
-  file: "",
-  name: "",
-  location: "",
-  category_id: "",
-  counter: "",
-});
+const formErrors = ref([{}]); // Track errors for each form entry
 
 const showSuccessPopup = ref(false); // Track the success popup visibility
 const router = useRouter(); // Access router for redirection
@@ -117,107 +125,132 @@ onMounted(async () => {
   }
 });
 
-const handleFileUpload = (event) => {
+const handleFileUpload = (event, index) => {
   const file = event.target.files[0];
   if (file) {
-    formData.value.file = file;
+    formData.value[index].file = file;
   }
+};
+
+const addForm = () => {
+  formData.value.push({
+    file: null,
+    name: "",
+    location: "",
+    category_id: "",
+    counter: "",
+  });
+
+  formErrors.value.push({});
+};
+
+const removeForm = (index) => {
+  formData.value.splice(index, 1);
+  formErrors.value.splice(index, 1);
 };
 
 const submitForm = async () => {
   // Reset previous error messages
-  formErrors.value = {
+  formErrors.value = formData.value.map(() => ({
     file: "",
     name: "",
     location: "",
     category_id: "",
     counter: "",
-  };
+  }));
 
   // Check for empty required fields
   let isValid = true;
-
-  if (!formData.value.file) {
-    formErrors.value.file = "Image file is required.";
-    isValid = false;
-  }
-
-  if (!formData.value.name) {
-    formErrors.value.name = "Name is required.";
-    isValid = false;
-  }
-
-  if (!formData.value.location) {
-    formErrors.value.location = "Location is required.";
-    isValid = false;
-  }
-
-  if (!formData.value.category_id) {
-    formErrors.value.category_id = "Category is required.";
-    isValid = false;
-  }
-
-  if (!formData.value.counter) {
-    formErrors.value.counter = "Counter is required.";
-    isValid = false;
-  }
+  formData.value.forEach((item, index) => {
+    if (!item.file) {
+      formErrors.value[index].file = "Image file is required.";
+      isValid = false;
+    }
+    if (!item.name) {
+      formErrors.value[index].name = "Name is required.";
+      isValid = false;
+    }
+    if (!item.location) {
+      formErrors.value[index].location = "Location is required.";
+      isValid = false;
+    }
+    if (!item.category_id) {
+      formErrors.value[index].category_id = "Category is required.";
+      isValid = false;
+    }
+    if (!item.counter) {
+      formErrors.value[index].counter = "Counter is required.";
+      isValid = false;
+    }
+  });
 
   if (!isValid) {
     return; // Do not submit the form if there are errors
   }
 
-  // Log the form data to verify structure before sending
-  console.log("Form data being submitted:", JSON.stringify(formData.value));
+  const token = localStorage.getItem("authToken");
 
-  const token = localStorage.getItem("authToken"); // Retrieve the token from localStorage or session storage
+  if (!token) {
+    console.error("No authentication token found.");
+    return;
+  }
 
   const url = "https://services.snaplab.id/api/v1/frame/";
 
-  // Use FormData to handle file upload
-  const formDataToSend = new FormData();
-  formDataToSend.append("file", formData.value.file);
-  formDataToSend.append("name", formData.value.name);
-  formDataToSend.append("location", formData.value.location);
-  formDataToSend.append("category_id", formData.value.category_id);
-  formDataToSend.append("counter", formData.value.counter);
+  // Loop through each form entry and submit one by one
+  for (let i = 0; i < formData.value.length; i++) {
+    const item = formData.value[i];
+    const formDataToSend = new FormData(); // FormData instance for each request
 
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`, // Add the token to the Authorization header
-      },
-      body: formDataToSend,
-    });
+    // Append each field to FormData
+    formDataToSend.append("file", item.file);
+    formDataToSend.append("name", item.name);
+    formDataToSend.append("location", item.location);
+    formDataToSend.append("category_id", item.category_id);
+    formDataToSend.append("counter", item.counter);
 
-    const data = await response.json();
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formDataToSend, // Send form data as a multipart form
+      });
 
-    // Check if the response was successful
-    if (response.ok) {
-      showSuccessPopup.value = true;
+      const data = await response.json();
 
-      // Reset form
-      formData.value = {
-        file: null,
-        name: "",
-        location: "",
-        category_id: "",
-        counter: "",
-      };
+      if (response.ok) {
+        console.log(`Frame #${i + 1} created successfully.`);
+        if (i === formData.value.length - 1) {
+          // Show success popup after the last post
+          showSuccessPopup.value = true;
 
-      // Close the success popup after 2 seconds and redirect
-      setTimeout(() => {
-        showSuccessPopup.value = false; // Hide the popup
-        router.back(); // Redirect to the previous page
-      }, 2000);
-    } else {
-      // Handle error if the response is not successful
-      alert(`Error: ${data.message || "An error occurred while creating the frame."}`);
+          // Reset form after all requests are complete
+          formData.value = [
+            {
+              file: null,
+              name: "",
+              location: "",
+              category_id: "",
+              counter: "",
+            },
+          ];
+
+          setTimeout(() => {
+            showSuccessPopup.value = false;
+            router.back();
+          }, 2000);
+        }
+      } else {
+        alert(`Error: ${data.message || "An error occurred while creating the frame."}`);
+        break; // Stop further submissions if any post fails
+      }
+    } catch (error) {
+      console.error("Error creating frame:", error);
+      alert("An error occurred while creating the frame.");
+      break; // Stop further submissions if any post fails
     }
-  } catch (error) {
-    // Log any error that occurs during the request
-    console.error("Error creating frame:", error);
-    alert("An error occurred while creating the frame.");
   }
 };
 </script>
